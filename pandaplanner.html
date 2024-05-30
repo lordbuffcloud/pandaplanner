@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Input Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e2d38; /* Dark teal background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #d8dee9; /* Light gray text */
+        }
+
+        #taskForm {
+            background: #27343d; /* Darker teal form background */
+            color: #d8dee9; /* Light gray text */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        #taskForm label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        #taskForm input[type="text"] {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #3b505a; /* Gray border */
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #1e2d38; /* Dark teal input background */
+            color: #d8dee9; /* Light gray input text */
+        }
+
+        #taskForm button {
+            background-color: #3b505a; /* Gray button */
+            color: #d8dee9; /* Light gray button text */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        #taskForm button:hover {
+            background-color: #4b6270;  /* Lighter gray on hover */
+            transform: translateY(-2px);
+        }
+
+        #videoContainer {
+            display: none;
+            margin-top: 20px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 315px;
+        }
+    </style>
+</head>
+<body>
+  <form id="taskForm">
+    <label for="task">What do you want to accomplish today?</label>
+    <input type="text" id="task" name="task" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="videoContainer">
+    <iframe id="youtubeVideo" width="560" height="315" src="https://www.youtube.com/embed/q-Y0bnx6Ndw?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <script>
+    document.getElementById('taskForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const task = document.getElementById('task').value;
+      const videoContainer = document.getElementById('videoContainer');
+      const form = document.getElementById('taskForm');
+
+      form.style.display = 'none';
+      videoContainer.style.display = 'block';
+
+      fetch('https://hooks.zapier.com/hooks/catch/15352316/2ydleyw/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ task })
+      }).then(response => {
+        if (response.ok) {
+          alert('Task submitted successfully!');
+          document.getElementById('task').value = ''; // Clear input field
+        } else {
+          alert('Error submitting task');
+        }
+
+        // Reset form and hide video after video ends
+        const video = document.getElementById('youtubeVideo');
+        video.onended = function() {
+          videoContainer.style.display = 'none';
+          form.style.display = 'block';
+        };
+      }).catch(error => {
+        alert('Error submitting task: ' + error.message);
+
+        // Reset form and hide video on error
+        videoContainer.style.display = 'none';
+        form.style.display = 'block';
+      });
+    });
+  </script>
+</body>
+</html>
