@@ -124,7 +124,7 @@
 
             const tasks = Array.from(form.querySelectorAll('input[type="text"]')).map(input => input.value);
 
-            fetch('https://hooks.zapier.com/hooks/catch/15352316/2y1tg94/', {
+            fetch('https://hooks.zapier.com/hooks/catch/15352316/2ydleyw/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -140,4 +140,19 @@
 
                 youtubeVideo.src += "?autoplay=1";
 
-                youtubeVideo.onended = (
+                youtubeVideo.onended = () => {
+                    videoContainer.style.display = 'none';
+                    form.reset();
+                    form.style.display = 'block';
+                };
+            })
+            .catch(error => {
+                console.error('Error submitting tasks:', error);
+                alert('Error submitting tasks. Please try again later.');
+                loadingAnimation.style.display = 'none';
+                form.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
