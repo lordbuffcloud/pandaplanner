@@ -9,12 +9,13 @@
             font-family: Arial, sans-serif;
             background-color: white;
             display: flex;
-            flex-direction: column; /* Stack elements vertically */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* Ensure content is centered even with short content */
             margin: 0;
-            color: black; 
+            color: black;
+            padding: 20px; /* Add some padding to the body */
         }
 
         #taskForm {
@@ -22,31 +23,31 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 90%; /* Make the form responsive */
+            width: 90%; 
             max-width: 500px;
             box-sizing: border-box;
         }
 
-        #taskForm label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 18px;
+        #taskForm ol {
+            list-style: none;
+            padding: 0;
+        }
+
+        #taskForm li {
+            margin-bottom: 10px;
         }
 
         #taskForm input[type="text"] {
-            width: calc(100% - 16px);
+            width: 100%; 
             padding: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #3b505a; /* Gray border */
+            border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
-            background-color: #1e2d38; /* Dark teal input background */
-            color: #d8dee9; /* Light gray input text */
         }
 
         #taskForm button {
-            background-color: #3b505a; /* Gray button */
-            color: #d8dee9; /* Light gray button text */
+            background-color: #007bff; 
+            color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 4px;
@@ -56,9 +57,10 @@
         }
 
         #taskForm button:hover {
-            background-color: #4b6270;  /* Lighter gray on hover */
+            background-color: #0056b3;
             transform: translateY(-2px);
         }
+
         #loadingAnimation {
             display: none;
             font-size: 18px;
@@ -68,20 +70,13 @@
         #videoContainer {
             display: none;
             margin-top: 20px;
-            width: 90%; /* Make video responsive */
+            width: 90%; 
             max-width: 500px;
         }
 
         iframe {
             width: 100%;
             height: 315px;
-        }
-
-        /* Styles for smaller screens */
-        @media (max-width: 600px) {
-            #taskForm, #videoContainer {
-                width: 95%;
-            }
         }
     </style>
 </head>
@@ -101,70 +96,43 @@
     <div id="loadingAnimation">Submitting task(s) to Pandas for processing...</div>
 
     <div id="videoContainer">
-        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/q-Y0bnx6Ndw?autoplay=1" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/q-Y0bnx6Ndw" title="YouTube video player" frameborder="0" allowfullscreen></iframe> 
     </div>
 
     <script>
-        #videoContainer {
-            display: none;
-            margin-top: 20px;
-        }
+        const form = document.getElementById('taskForm');
+        const loadingAnimation = document.getElementById('loadingAnimation');
+        const videoContainer = document.getElementById('videoContainer');
+        const youtubeVideo = document.getElementById('youtubeVideo');
 
-        iframe {
-            width: 100%;
-            height: 315px;
-        }
-    </style>
-</head>
-<body>
-  <form id="taskForm">
-    <label for="task">What do you want to accomplish today?</label>
-    <input type="text" id="task" name="task" required>
-    <button type="submit">Submit</button>
-  </form>
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
 
-  <div id="videoContainer">
-    <iframe id="youtubeVideo" width="560" height="315" src="https://www.youtube.com/embed/q-Y0bnx6Ndw?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-  </div>
+            // Show loading animation and hide form
+            form.style.display = 'none';
+            loadingAnimation.style.display = 'block';
 
-  <script>
-    document.getElementById('taskForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const task = document.getElementById('task').value;
-      const videoContainer = document.getElementById('videoContainer');
-      const form = document.getElementById('taskForm');
+            // Get task values
+            const tasks = Array.from(form.querySelectorAll('input[type="text"]')).map(input => input.value);
 
-      form.style.display = 'none';
-      videoContainer.style.display = 'block';
+            // Simulate sending to Pandas (replace with actual fetch call)
+            setTimeout(() => {
+                loadingAnimation.style.display = 'none';
+                videoContainer.style.display = 'block';
 
-      fetch('https://hooks.zapier.com/hooks/catch/15352316/2ydleyw/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ task })
-      }).then(response => {
-        if (response.ok) {
-          alert('Task submitted successfully!');
-          document.getElementById('task').value = ''; // Clear input field
-        } else {
-          alert('Error submitting task');
-        }
+                // Start video playback after showing the container
+                youtubeVideo.src += "?autoplay=1"; // Append autoplay parameter
+                
+                youtubeVideo.onended = () => {
+                    videoContainer.style.display = 'none';
+                    form.reset();
+                    form.style.display = 'block';
+                };
+            }, 2000); // Simulate processing time
+        });
+    </script>
 
-        // Reset form and hide video after video ends
-        const video = document.getElementById('youtubeVideo');
-        video.onended = function() {
-          videoContainer.style.display = 'none';
-          form.style.display = 'block';
-        };
-      }).catch(error => {
-        alert('Error submitting task: ' + error.message);
-
-        // Reset form and hide video on error
-        videoContainer.style.display = 'none';
-        form.style.display = 'block';
-      });
-    });
-  </script>
+</body>
+</html>
 </body>
 </html>
