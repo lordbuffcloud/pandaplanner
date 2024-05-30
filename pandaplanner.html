@@ -93,8 +93,66 @@
     </style>
 </head>
 <body>
-    </body>
-</html>
+    <form id="taskForm">
+        <ol>
+            <li><input type="text" name="task1" placeholder="Task 1" required></li>
+            <li><input type="text" name="task2" placeholder="Task 2" required></li>
+            <li><input type="text" name="task3" placeholder="Task 3" required></li>
+            <li><input type="text" name="task4" placeholder="Task 4" required></li>
+            <li><input type="text" name="task5" placeholder="Task 5" required></li>
+        </ol>
+        <button type="submit">Submit</button>
+    </form>
 
-</html>
+    <div id="loadingAnimation">Submitting task(s) to Pandas for processing...</div>
+
+    <div id="videoContainer">
+        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/q-Y0bnx6Ndw" title="YouTube video player" frameborder="0" allowfullscreen></iframe> 
+    </div>
+
+    <script>
+        const form = document.getElementById('taskForm');
+        const loadingAnimation = document.getElementById('loadingAnimation');
+        const videoContainer = document.getElementById('videoContainer');
+        const youtubeVideo = document.getElementById('youtubeVideo');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            form.style.display = 'none';
+            loadingAnimation.style.display = 'block';
+
+            const tasks = Array.from(form.querySelectorAll('input[type="text"]')).map(input => input.value);
+
+            fetch('https://hooks.zapier.com/hooks/catch/15352316/2ydleyw/', {  // Corrected webhook URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tasks })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                loadingAnimation.style.display = 'none';
+                videoContainer.style.display = 'block';
+
+                youtubeVideo.src += "?autoplay=1"; 
+
+                youtubeVideo.onended = () => {
+                    videoContainer.style.display = 'none';
+                    form.reset();
+                    form.style.display = 'block';
+                };
+            })
+            .catch(error => {
+                console.error('Error submitting tasks:', error);
+                alert('Error submitting tasks. Please try again later.');
+                loadingAnimation.style.display = 'none'; 
+                form.style.display = 'block';
+            });
+        });
+    </script>
+</body>
 </html>
