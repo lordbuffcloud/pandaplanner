@@ -93,9 +93,16 @@
     </style>
 </head>
 <body>
-
     <form id="taskForm">
-        </form>
+        <ol>
+            <li><input type="text" name="task1" placeholder="Task 1" required></li>
+            <li><input type="text" name="task2" placeholder="Task 2" required></li>
+            <li><input type="text" name="task3" placeholder="Task 3" required></li>
+            <li><input type="text" name="task4" placeholder="Task 4" required></li>
+            <li><input type="text" name="task5" placeholder="Task 5" required></li>
+        </ol>
+        <button type="submit">Submit</button>
+    </form>
 
     <div id="loadingAnimation">Submitting task(s) to Pandas for processing...</div>
 
@@ -112,20 +119,17 @@
         form.addEventListener('submit', (event) => {
             event.preventDefault();
 
-            // Show loading animation and hide form
             form.style.display = 'none';
             loadingAnimation.style.display = 'block';
 
-            // Get task values
             const tasks = Array.from(form.querySelectorAll('input[type="text"]')).map(input => input.value);
 
-            // Send data to Zapier webhook
-            fetch('https://hooks.zapier.com/hooks/catch/15352316/2ydleyw/', {
+            fetch('https://hooks.zapier.com/hooks/catch/15352316/2ydleyw/', {  // Corrected webhook URL
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ tasks }) // Send tasks as an array
+                body: JSON.stringify({ tasks })
             })
             .then(response => {
                 if (!response.ok) {
@@ -134,9 +138,8 @@
                 loadingAnimation.style.display = 'none';
                 videoContainer.style.display = 'block';
 
-                // Start video playback after showing the container
-                youtubeVideo.src += "?autoplay=1"; // Append autoplay parameter
-                
+                youtubeVideo.src += "?autoplay=1"; 
+
                 youtubeVideo.onended = () => {
                     videoContainer.style.display = 'none';
                     form.reset();
@@ -146,14 +149,11 @@
             .catch(error => {
                 console.error('Error submitting tasks:', error);
                 alert('Error submitting tasks. Please try again later.');
-                // Reset the form even if there's an error
                 loadingAnimation.style.display = 'none'; 
                 form.style.display = 'block';
             });
         });
     </script>
-
 </body>
 </html>
-</body>
 </html>
