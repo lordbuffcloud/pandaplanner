@@ -96,15 +96,14 @@
     <form id="taskForm">
         <ol>
             <li><input type="text" name="task1" placeholder="Task 1"></li>
-
         </ol>
         <button type="submit">Submit</button>
     </form>
 
-    <div id="loadingAnimation">Submitting task(s) to Pandas for processing...</div>
+    <div id="loadingAnimation">Submitting task(s) to Zapier for processing...</div>
 
     <div id="videoContainer">
-        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/q-Y0bnx6Ndw" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+        <iframe id="youtubeVideo" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
     </div>
 
     <script>
@@ -139,13 +138,13 @@
                 loadingAnimation.style.display = 'none';
                 videoContainer.style.display = 'block';
 
-                youtubeVideo.src += "?autoplay=1";
+                youtubeVideo.src += "&autoplay=1";
 
-                youtubeVideo.onended = () => {
+                youtubeVideo.addEventListener('ended', () => {
                     videoContainer.style.display = 'none';
                     form.reset();
                     form.style.display = 'block';
-                };
+                }, { once: true });
             })
             .catch(error => {
                 console.error('Error submitting tasks:', error);
